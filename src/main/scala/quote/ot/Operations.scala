@@ -1,4 +1,4 @@
-package ot
+package quote.ot
 
 import io.circe._
 import io.circe.generic.semiauto._

@@ -1,4 +1,4 @@
-package ot
+package quote.ot
 
 object OperationalTransformation:
   def transform(a: Operation, b: Operation): (Operation, Operation) = (a, b) match
