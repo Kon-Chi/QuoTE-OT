@@ -18,19 +18,20 @@ object OperationalTransformation:
       if (end1 <= i2)
         // a before b: no change
         (Delete(i1, s1), Delete(i2 - s1.length, s2))  // b' adjusted left
-      else if (i1 >= end2)
+      else if (end2 <= i1)
         // a after b: a adjusted left
         (Delete(i1 - s2.length, s1), Delete(i2, s2))
       else
         // Overlapping deletions: subtract intersection
-        val overlapStart = math.max(i1, i2)
-        val overlapEnd = math.min(end1, end2)
-        val overlapLen = overlapEnd - overlapStart
+        val (ss1, ss2): (String, String)
+          =    if i1 <= i2 && end1 <= end2 then (s2.drop(end1 - i2), s1.take(i2 - i1))
+          else if i1 <= i2 && end2 <= end1 then ("", s1.take(i2 - i1) ++ s1.drop(end2 - i1))
+          else if i2 <= i1 && end2 <= end1 then (s2.take(i1 - i2), s1.drop(end2 - i1))
+          else if i2 <= i1 && end1 <= end2 then (s2.take(i1 - i2) ++ s2.drop(end1 - i2), "")
+          else (s1, s2)
 
-        val newS1 = if   i1 < i2   then s1.substring(0, i2 - i1) else ""
-        val newS2 = if end2 > end1 then s2.substring(overlapEnd - i2) else ""
-
-        (Delete(i1, newS1), Delete(i2, newS2))
+        val i = math.min(i1, i2)
+        (Delete(i, ss1), Delete(i, ss2))
 
     // Case 3: Insert vs Delete
     case (Insert(i1, s1), Delete(i2, s2)) =>
