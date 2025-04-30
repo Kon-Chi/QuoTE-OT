@@ -43,9 +43,9 @@ object OperationalTransformation:
 
     // Case 4: Delete vs Insert
     case (Delete(i1, s1), Insert(i2, s2)) =>
-      if (i1 >= i2)
+      if (i2 <= i1)
         (Delete(i1 + s2.length, s1), Insert(i2, s2))  // a' shifted right
-      else if (i2 >= i1 + s1.length)
+      else if (i2 < i1 + s1.length)
         (Delete(i1, s1.take(i2 - i1) ++ s2 ++ s1.drop(i2 - i1)), Insert(i1, ""))
       else
         (Delete(i1, s1), Insert(i2 - s1.length, s2))  // b' shifted left
